@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import './QrCode.css'; 
@@ -26,7 +26,7 @@ export const QrCode = () => {
         const pngUrl = canvas
             .toDataURL('image/png')
             .replace('image/png', 'image/octet-stream');
-        let downloadLink = document.createElement('a');
+        let downloadLink = document.createElement('a'); 
         downloadLink.href = pngUrl;
         downloadLink.download = 'qr-code.png';
         document.body.appendChild(downloadLink);
