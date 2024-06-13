@@ -10,7 +10,7 @@ export const QrCode = () => {
     const [fgColor, setFgColor] = useState('#000000');
     const [bgColor, setBgColor] = useState('#ffffff');
     const [qrValue, setQrValue] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false); 
     const [logo, setLogo] = useState('');
 
     const handleGenerate = () => {
