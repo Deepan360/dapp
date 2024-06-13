@@ -153,7 +153,7 @@ export const QrCode = () => {
                     )}
                 </div>
             </div>
-            <p className="footer-text">Designed by YOU KNOW THAT.</p>
+            <p className="footer-text">Designed And Developed by {"YOU KNOW THAT"}.</p>
         </div>
     );
 };
