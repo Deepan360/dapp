@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import './QrCode.css'; 
@@ -144,8 +143,8 @@ export const QrCode = () => {
                                     src: logo,
                                     x: null,
                                     y: null,
-                                    height: Math.min(size * 0.5, 100),
-                                    width: Math.min(size * 0.5, 100),
+                                    height: Math.min(size * 0.25, 50),
+                                    width: Math.min(size * 0.25, 50),
                                     excavate: true,
                                 } : null}
                             />
