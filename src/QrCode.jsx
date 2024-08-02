@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
-import './QrCode.css'; 
-import loadingGif from '/giphy.webp'; 
+import './QrCode.css';
+import loadingGif from '/giphy.webp';
 
 export const QrCode = () => {
     const [data, setData] = useState('');
@@ -9,8 +9,9 @@ export const QrCode = () => {
     const [fgColor, setFgColor] = useState('#000000');
     const [bgColor, setBgColor] = useState('#ffffff');
     const [qrValue, setQrValue] = useState('');
-    const [loading, setLoading] = useState(false); 
+    const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState('');
+    const qrCodeRef = useRef(null);
 
     const handleGenerate = () => {
         setLoading(true);
@@ -21,16 +22,27 @@ export const QrCode = () => {
     };
 
     const handleDownload = () => {
-        const canvas = document.getElementById('qrCode');
-        const pngUrl = canvas
-            .toDataURL('image/png')
-            .replace('image/png', 'image/octet-stream');
-        let downloadLink = document.createElement('a'); 
-        downloadLink.href = pngUrl;
-        downloadLink.download = 'qr-code.png';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        const qrCanvas = qrCodeRef.current.querySelector('canvas');
+        if (qrCanvas) {
+            const borderSize = 10; // 10px border
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = qrCanvas.width + borderSize * 2;
+            canvas.height = qrCanvas.height + borderSize * 2;
+
+            context.fillStyle = '#ffffff';
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(qrCanvas, borderSize, borderSize);
+
+            const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+            let downloadLink = document.createElement('a');
+            downloadLink.href = pngUrl;
+            downloadLink.download = 'qr-code.png';
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
     };
 
     const handleLogoUpload = (event) => {
@@ -53,6 +65,16 @@ export const QrCode = () => {
             setSize(newSize);
         }
     };
+
+    useEffect(() => {
+        if (loading) {
+            const timer = setTimeout(() => {
+                setQrValue(data);
+                setLoading(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, data]);
 
     return (
         <div className="app-container">
@@ -125,15 +147,14 @@ export const QrCode = () => {
                         accept="image/png, image/jpeg"
                         onChange={handleLogoUpload}
                     />
-                    {loading && (      
+                    {loading && (
                         <div className="loading-container">
                             <img src={loadingGif} alt="Loading" className="loading-gif" />
                         </div>
                     )}
                     {!loading && qrValue && (
-                        <div className="qr-code-container">
+                        <div className="qr-code-container" ref={qrCodeRef}>
                             <QRCodeCanvas
-                                id="qrCode"
                                 value={qrValue}
                                 size={Math.min(size, 300)}
                                 level={"H"}
