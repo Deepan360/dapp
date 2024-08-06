@@ -12,6 +12,8 @@ export const QrCode = () => {
     const [qrValue, setQrValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState('');
+    // eslint-disable-next-line no-undef
+    const qrCodeRef = useRef(null);
 
     const handleGenerate = () => {
         setLoading(true);
@@ -54,6 +56,17 @@ export const QrCode = () => {
             setSize(newSize);
         }
     };
+
+    // eslint-disable-next-line no-undef
+    useEffect(() => {
+        if (loading) {
+            const timer = setTimeout(() => {
+                setQrValue(data);
+                setLoading(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [loading, data]);
 
     return (
         <div className="app-container">
@@ -132,9 +145,8 @@ export const QrCode = () => {
                         </div>
                     )}
                     {!loading && qrValue && (
-                        <div className="qr-code-container">
+                        <div className="qr-code-container" ref={qrCodeRef}>
                             <QRCodeCanvas
-                                id="qrCode"
                                 value={qrValue}
                                 size={Math.min(size, 300)}
                                 level={"H"}
