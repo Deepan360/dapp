@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
 import './QrCode.css';
 import loadingGif from '/giphy.webp';
@@ -12,7 +12,6 @@ export const QrCode = () => {
     const [qrValue, setQrValue] = useState('');
     const [loading, setLoading] = useState(false);
     const [logo, setLogo] = useState('');
-    const qrCodeRef = useRef(null);
 
     const handleGenerate = () => {
         setLoading(true);
@@ -23,16 +22,16 @@ export const QrCode = () => {
     };
 
     const handleDownload = () => {
-        const canvas = qrCodeRef.current.querySelector('canvas');
-        if (canvas) {
-            const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-            let downloadLink = document.createElement('a');
-            downloadLink.href = pngUrl;
-            downloadLink.download = 'qr-code.png';
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-        }
+        const canvas = document.getElementById('qrCode');
+        const pngUrl = canvas
+            .toDataURL('image/png', 1.0)  // Ensure high-quality PNG
+            .replace('image/png', 'image/octet-stream');
+        let downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = 'qr-code.png';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
     };
 
     const handleLogoUpload = (event) => {
@@ -56,19 +55,9 @@ export const QrCode = () => {
         }
     };
 
-    useEffect(() => {
-        if (loading) {
-            const timer = setTimeout(() => {
-                setQrValue(data);
-                setLoading(false);
-            }, 2000);
-            return () => clearTimeout(timer);
-        }
-    }, [loading, data]);
-
     return (
         <div className="app-container">
-            <img src="/vite.svg" alt="App Logo" className="app-logo" />
+            <img src="/qr (1).png" alt="App Logo" className="app-logo" />
             <div className="form-container">
                 <div className="form-left">
                     <label htmlFor="dataInput" className="input-label">Data for QR Code:</label>
@@ -143,8 +132,9 @@ export const QrCode = () => {
                         </div>
                     )}
                     {!loading && qrValue && (
-                        <div className="qr-code-container" ref={qrCodeRef}>
+                        <div className="qr-code-container">
                             <QRCodeCanvas
+                                id="qrCode"
                                 value={qrValue}
                                 size={Math.min(size, 300)}
                                 level={"H"}
