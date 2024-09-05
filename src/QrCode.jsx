@@ -28,35 +28,41 @@ export const QrCode = () => {
         if (qrCanvas) {
             const borderSize = 10; // Border size for the QR code
             const labelHeight = 30; // Height of the label area
+            const scale = 4; // Increased scaling factor for HD quality
+    
+            // Create a larger canvas for HD quality
             const canvas = document.createElement('canvas');
             const context = canvas.getContext('2d');
-    
-            // Set canvas dimensions
-            canvas.width = qrCanvas.width + borderSize * 2;
-            canvas.height = qrCanvas.height + borderSize * 2 + labelHeight;
+        
+            // Set canvas dimensions with scaling factor
+            canvas.width = (qrCanvas.width + borderSize * 2) * scale;
+            canvas.height = (qrCanvas.height + borderSize * 2 + labelHeight) * scale;
+        
+            // Scale the context
+            context.scale(scale, scale);
     
             // Fill the background
             context.fillStyle = '#ffffff';
-            context.fillRect(0, 0, canvas.width, canvas.height);
-    
-            // Draw the QR code
+            context.fillRect(0, 0, canvas.width / scale, canvas.height / scale);
+        
+            // Draw the QR code with scaling
             context.drawImage(qrCanvas, borderSize, borderSize);
-    
+        
             // Draw the label without border
             if (label) {
                 context.fillStyle = '#000000'; // Label text color
-                context.font = '16px Arial'; // Label text size and font
+                context.font = '24px Arial'; // Adjusted font size for HD quality
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
-    
+        
                 // Calculate label position
-                const labelX = canvas.width / 2;
+                const labelX = canvas.width / scale / 2;
                 const labelY = qrCanvas.height + borderSize + labelHeight / 2;
     
                 // Draw the label text
                 context.fillText(label, labelX, labelY);
             }
-    
+        
             // Convert canvas to downloadable PNG
             const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
             let downloadLink = document.createElement('a');
@@ -84,9 +90,9 @@ export const QrCode = () => {
 
     const handleSizeChange = (e) => {
         const newSize = parseInt(e.target.value, 10);
-        if (newSize > 900) {
-            alert('Maximum size reached (900).');
-            setSize(900);
+        if (newSize > 300) {
+            alert('Maximum size reached (300).');
+            setSize(300);
         } else {
             setSize(newSize);
         }
