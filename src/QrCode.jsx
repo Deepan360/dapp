@@ -42,21 +42,16 @@ export const QrCode = () => {
             // Draw the QR code
             context.drawImage(qrCanvas, borderSize, borderSize);
     
-            // Draw the label and its border
+            // Draw the label without border
             if (label) {
                 context.fillStyle = '#000000'; // Label text color
-                context.font = '14px Arial'; // Label text size and font
+                context.font = '16px Arial'; // Label text size and font
                 context.textAlign = 'center';
                 context.textBaseline = 'middle';
     
                 // Calculate label position
                 const labelX = canvas.width / 2;
                 const labelY = qrCanvas.height + borderSize + labelHeight / 2;
-    
-                // Draw the border for the label
-                context.strokeStyle = '#000000'; // Border color
-                context.lineWidth = 2; // Border width
-                context.strokeRect(borderSize, qrCanvas.height + borderSize, qrCanvas.width, labelHeight);
     
                 // Draw the label text
                 context.fillText(label, labelX, labelY);
@@ -72,6 +67,8 @@ export const QrCode = () => {
             document.body.removeChild(downloadLink);
         }
     };
+    
+    
     
     
     const handleLogoUpload = (event) => {
